@@ -3,24 +3,469 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitFlow</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <title>FitFlow</title>
+  <!-- Load Tailwind CSS from CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Inter font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Custom styles for the body background and font */
+    body {
+      font-family: 'Inter', sans-serif; /* Apply Inter font to the entire body */
+      /* Clean gradient background */
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh; /* Ensure body takes at least full viewport height */
+      display: flex; /* Use flexbox for layout */
+      flex-direction: column; /* Arrange content vertically */
+      align-items: center; /* Center horizontally */
+      justify-content: flex-start; /* Align content to the top for draggable sections */
+      color: #ffffff; /* Default text color for body */
+      overflow-x: hidden; /* Prevent horizontal scrolling on small screens */
+      padding: 1rem; /* Add some padding around the edges */
+    }
 
+    /* Custom utility for text shadow (optional, for extra pop) */
+    .text-shadow-lg {
+      text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Adjust scroll-margin-top for anchor links to account for fixed nav bar */
+    .scroll-mt-24 {
+      scroll-margin-top: 0; /* Changed to 0, as JS will handle the offset */
+    }
+
+    /* Styles for draggable elements */
+    .draggable-section {
+      cursor: grab; /* Indicate draggable */
+      margin-bottom: 2.5rem; /* Equivalent to mt-10 but for consistent spacing below */
+      /* Ensure consistent styling with other sections */
+      background-color: rgba(255, 255, 255, 0.1); /* bg-white bg-opacity-10 */
+      -webkit-backdrop-filter: blur(8px); /* backdrop-filter backdrop-blur-lg */
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem; /* rounded-3xl */
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+      max-width: 30rem; /* max-w-sm (480px) */
+      padding: 2rem; /* p-8 */
+      text-align: center; /* text-center */
+      width: 100%; /* w-full */
+      /* Consistent hover animation for all draggable sections */
+      transform: scale(1); /* Ensure base scale is 1 */
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, border 0.2s ease;
+      border: 2px solid transparent; /* Default transparent border */
+    }
+
+    .draggable-section:hover {
+      transform: scale(1.02); /* Subtle grow on hover */
+    }
+
+    /* Styles when an item is being dragged */
+    .dragging {
+      opacity: 0.5; /* Make dragged item semi-transparent */
+      border: 2px dashed rgba(255, 255, 255, 0.5); /* Dashed border for visual feedback */
+    }
+
+    /* Styles when a dragged item is over a valid drop target */
+    .draggable-section.drag-over-above {
+      border-top: 4px solid #33cc33; /* Green border at the top for insertion above */
+      box-shadow: 0 0 15px 5px rgba(51, 204, 51, 0.5); /* Greenish glow */
+    }
+    .draggable-section.drag-over-below {
+      border-bottom: 4px solid #33cc33; /* Green border at the bottom for insertion below */
+      box-shadow: 0 0 15px 5px rgba(51, 204, 51, 0.5); /* Greenish glow */
+    }
+
+    /* Style for 'Move Mode' enabled sections */
+    .move-mode-active {
+      border: 2px dashed rgba(144, 238, 144, 0.7); /* Light green dashed border */
+      cursor: grab;
+    }
+
+    /* Tailwind CSS custom toggle switch */
+    .toggle-switch input[type="checkbox"] {
+      height: 0;
+      width: 0;
+      visibility: hidden;
+    }
+
+    .toggle-switch label {
+      cursor: pointer;
+      width: 50px;
+      height: 25px;
+      background: #ccc;
+      display: block;
+      border-radius: 25px;
+      position: relative;
+    }
+
+    .toggle-switch label:after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 19px;
+      height: 19px;
+      background: #fff;
+      border-radius: 19px;
+      transition: 0.3s;
+    }
+
+    .toggle-switch input:checked + label {
+      background: #6a11cb;
+    }
+
+    .toggle-switch input:checked + label:after {
+      left: calc(100% - 3px);
+      transform: translateX(-100%);
+    }
+
+    /* Responsive adjustments for max-width on larger screens */
+    @media (min-width: 768px) { /* md breakpoint */
+      .draggable-section {
+        max-width: 36rem; /* md:max-w-xl (576px) */
+      }
+    }
+    @media (min-width: 1024px) { /* lg breakpoint */
+      .draggable-section {
+        max-width: 48rem; /* lg:max-w-2xl (768px) */
+      }
+    }
+  </style>
 </head>
-<body>
-  <nav>
-<nav>
-  <a href="index.html">Home</a>
-  <a href="workout.html">Workout Plans</a>
-  <a href="store.html">Store</a>
-</nav>
-<div class="content">
-  <h1>Welcome to FitFlow</h1>
-  <p>Your home and gym workout assistant</p>
-  <a href="#" class="button" id="start-workout">Start Workout</a>
-  <a href="#" class="button">Open Store</a>
-  <script src="script.js"></script>
-</div>
+<body class="p-4">
+  <!-- Frosted-glass style navigation bar -->
+  <!-- Changed to justify-center to center the entire group (links + button) -->
+  <nav id="main-nav" class="w-full max-w-4xl mx-auto mb-10 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 flex items-center justify-center space-x-6 md:space-x-12 sticky top-4 z-50">
+    <!-- Navigation Links -->
+    <a href="#hero-section" class="nav-link text-white text-lg font-semibold hover:text-blue-200 transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-blue-300">Home</a>
+    <a href="#workout-section" class="nav-link text-white text-lg font-semibold hover:text-blue-200 transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-blue-300">Workout Plans</a>
+    <a href="#progress-section" class="nav-link text-white text-lg font-semibold hover:text-blue-200 transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-blue-300">Track Progress</a>
+    <a href="#store-section" class="nav-link text-white text-lg font-semibold hover:text-blue-200 transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-blue-300">Store</a>
+
+    <!-- Settings Icon - Added ml-4 for spacing, now part of the centered flex items -->
+    <button id="open-settings-panel" class="ml-4 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-full p-3 shadow-lg hover:bg-opacity-20 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-300">
+      <!-- Gear icon (SVG) -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-white">
+        <path fill-rule="evenodd" d="M11.078 2.292c.38-.962 1.903-.962 2.283 0l1.724 4.382a.75.75 0 0 0 .58.42c3.484.627 6.16 3.655 6.16 7.156v2.463a.75.75 0 0 1-.413.689l-1.928.932c-.529.256-.957.944-.813 1.574l.872 3.866a.75.75 0 0 1-1.074.808l-3.92-.93a.75.75 0 0 0-.693.093l-2.072 1.777a.75.75 0 0 1-.954 0l-2.072-1.777a.75.75 0 0 0-.693-.093l-3.92.93a.75.75 0 0 1-1.074-.808l.872-3.866c.144-.63-.284-1.318-.813-1.574l-1.928-.932a.75.75 0 0 1-.413-.69v-2.463c0-3.501 2.676-6.529 6.16-7.156a.75.75 0 0 0 .58-.42l1.724-4.382ZM12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z" clip-rule="evenodd" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Settings Panel -->
+  <!-- Positioned relative to the viewport top and right, with adjusted top based on nav height -->
+  <div id="settings-panel" class="fixed right-6 z-[65] bg-white bg-opacity-15 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-6 min-w-[250px] transform translate-x-full opacity-0 transition-all duration-300 ease-out hidden">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold text-white">Settings</h3>
+      <button id="close-settings-panel" class="text-white text-2xl font-bold hover:text-gray-300 focus:outline-none">&times;</button>
+    </div>
+    <div class="flex items-center justify-between py-2">
+      <span class="text-white text-lg">Enable Move Mode</span>
+      <div class="toggle-switch">
+        <input type="checkbox" id="move-mode-toggle">
+        <label for="move-mode-toggle"></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Centered hero section - Now STATIC -->
+  <div id="hero-section" class="hero-section flex flex-col items-center justify-center text-center p-8 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-3xl shadow-2xl max-w-sm md:max-w-xl lg:max-w-2xl mx-auto transform hover:scale-105 transition-transform duration-500 mb-10">
+    <!-- Main title -->
+    <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight text-shadow-lg">Welcome to FitFlow</h1>
+    <!-- Subtitle -->
+    <p class="text-xl md:text-2xl lg:text-3xl font-light mb-8 opacity-90">Your home and gym workout assistant</p>
+
+    <!-- Buttons container -->
+    <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 w-full justify-center">
+      <!-- Start Workout button scrolls to #workout-section -->
+      <a href="#workout-section" id="start-workout-btn" class="button bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-75">
+        Start Workout
+      </a>
+      <!-- Open Store button scrolls to #store-section -->
+      <a href="#store-section" id="open-store-btn" class="button bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-75">
+        Open Store
+      </a>
+    </div>
+    <!-- Need Help? button for the modal -->
+    <button id="open-help-modal" class="mt-8 bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-75">
+      Need Help?
+    </button>
+  </div>
+
+  <!-- Track Your Progress Section - Draggable -->
+  <div id="progress-section" class="draggable-section progress-tracker-section" draggable="true">
+    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-shadow-lg">Track Your Progress 📊</h2>
+    <p class="text-lg md:text-xl font-light mb-6 opacity-90">Monitor your fitness journey, celebrate your achievements, and stay motivated towards your goals!</p>
+
+    <!-- Buttons container for progress tracking -->
+    <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 w-full justify-center">
+      <!-- View History button -->
+      <a href="history.html" class="button bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-opacity-75">
+        View History
+      </a>
+      <!-- Set New Goal button -->
+      <a href="set-goal.html" class="button bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-green-300 focus:ring-opacity-75">
+        Set New Goal
+      </a>
+    </div>
+  </div>
+
+  <!-- Placeholder Workout Plans Section - Draggable -->
+  <div id="workout-section" class="draggable-section workout-plans-section scroll-mt-24" draggable="true">
+    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-shadow-lg">Your Workout Plans 🏋️‍♀️</h2>
+    <p class="text-lg md:text-xl font-light opacity-90">Find a workout that fits your goals, whether at home or in the gym. (Content coming soon on <a href="workout.html" class="text-blue-200 hover:underline">Workout Plans page</a>)</p>
+  </div>
+
+  <!-- Placeholder Store Section - Draggable -->
+  <div id="store-section" class="draggable-section store-section scroll-mt-24" draggable="true">
+    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-shadow-lg">FitFlow Store 🛍️</h2>
+    <p class="text-lg md:text-xl font-light opacity-90">Explore our selection of fitness gear, supplements, and apparel. (Content coming soon on <a href="store.html" class="text-blue-200 hover:underline">Store page</a>)</p>
+  </div>
+
+  <!-- Help Modal Structure -->
+  <div id="help-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-white bg-opacity-15 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 max-w-md w-full relative transform scale-95 opacity-0 transition-all duration-300 ease-out">
+      <button id="close-help-modal" class="absolute top-4 right-4 text-white text-2xl font-bold hover:text-gray-300 focus:outline-none">
+        &times; <!-- Close icon -->
+      </button>
+      <h3 class="text-3xl font-bold text-white mb-4 text-shadow-lg">Need Help? 🤔</h3>
+      <p class="text-lg text-white leading-relaxed">
+        Welcome to FitFlow! This app helps you manage your home and gym workouts, discover healthy recipes, and track your fitness progress.
+        <br><br>
+        If you have any questions, feel free to use the "Generate Recipe" feature to explore AI-powered meal ideas, or reach out to support at <a href="mailto:support@fitflow.com" class="text-blue-200 hover:underline">support@fitflow.com</a>.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Get references to all smooth-scrolling links (hero buttons and nav links)
+    const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
+    const mainNav = document.getElementById('main-nav'); // Get reference to the main navigation
+
+    // Get references for the Help Modal
+    const openHelpModalBtn = document.getElementById('open-help-modal');
+    const helpModal = document.getElementById('help-modal');
+    const closeHelpModalBtn = document.getElementById('close-help-modal');
+    const helpModalContent = helpModal.querySelector('div'); // The inner modal box for animation
+
+    // Get all draggable sections (excluding the hero section)
+    const draggableSections = document.querySelectorAll('.draggable-section');
+    let draggedItem = null; // To store the currently dragged element
+
+    // Get references for the new Settings Panel
+    const openSettingsPanelBtn = document.getElementById('open-settings-panel');
+    const settingsPanel = document.getElementById('settings-panel');
+    const closeSettingsPanelBtn = document.getElementById('close-settings-panel');
+    const moveModeToggle = document.getElementById('move-mode-toggle');
+
+    // Function to open the help modal with animation
+    function openModal() {
+      helpModal.classList.remove('hidden');
+      // Trigger reflow to ensure transition plays
+      void helpModalContent.offsetWidth;
+      helpModalContent.classList.remove('scale-95', 'opacity-0');
+      helpModalContent.classList.add('scale-100', 'opacity-100');
+    }
+
+    // Function to close the help modal with animation
+    function closeModal() {
+      helpModalContent.classList.remove('scale-100', 'opacity-100');
+      helpModalContent.classList.add('scale-95', 'opacity-0');
+      helpModal.addEventListener('transitionend', function handler() {
+        helpModal.classList.add('hidden');
+        helpModal.removeEventListener('transitionend', handler);
+      }, { once: true });
+    }
+
+    // Function to open the settings panel with animation
+    function openSettingsPanel() {
+      settingsPanel.classList.remove('hidden');
+      // Calculate panel top position dynamically based on nav bar bottom
+      const navRect = mainNav.getBoundingClientRect();
+      // Adjust top position to be just below the navbar, plus some padding (e.g., 10px)
+      settingsPanel.style.top = `${navRect.bottom + 10}px`; 
+
+      // Trigger reflow for transition
+      void settingsPanel.offsetWidth;
+      settingsPanel.classList.remove('translate-x-full', 'opacity-0');
+      settingsPanel.classList.add('translate-x-0', 'opacity-100');
+    }
+
+    // Function to close the settings panel with animation
+    function closeSettingsPanel() {
+      settingsPanel.classList.remove('translate-x-0', 'opacity-100');
+      settingsPanel.classList.add('translate-x-full', 'opacity-0');
+      settingsPanel.addEventListener('transitionend', function handler() {
+        settingsPanel.classList.add('hidden');
+        settingsPanel.removeEventListener('transitionend', handler);
+      }, { once: true });
+    }
+
+    // Initialize drag state based on toggle
+    function updateDragMode() {
+      const isMoveModeEnabled = moveModeToggle.checked;
+      draggableSections.forEach(section => {
+        // Set draggable attribute based on toggle state
+        section.setAttribute('draggable', isMoveModeEnabled);
+        if (isMoveModeEnabled) {
+          section.classList.add('move-mode-active');
+        } else {
+          section.classList.remove('move-mode-active');
+          // Reset any active drag states if move mode is turned off mid-drag
+          section.classList.remove('dragging', 'drag-over-above', 'drag-over-below');
+        }
+      });
+    }
+
+    // Event listeners for the help modal
+    openHelpModalBtn.addEventListener('click', openModal);
+    closeHelpModalBtn.addEventListener('click', closeModal);
+    helpModal.addEventListener('click', (e) => {
+      if (e.target === helpModal) {
+        closeModal();
+      }
+    });
+
+    // Event listeners for the settings panel
+    openSettingsPanelBtn.addEventListener('click', openSettingsPanel);
+    closeSettingsPanelBtn.addEventListener('click', closeSettingsPanel);
+
+    // Event listener for the move mode toggle
+    moveModeToggle.addEventListener('change', updateDragMode);
+
+    // Apply smooth scrolling to all links with an href starting with '#'
+    smoothScrollLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent default anchor jump
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+
+        if (targetElement) {
+          let scrollPosition;
+          const navHeight = mainNav ? mainNav.offsetHeight + 20 : 0; // Add some extra padding (20px)
+          
+          // Special handling for the "Home" link, scroll to absolute top
+          if (targetId === '#hero-section' && this.classList.contains('nav-link')) {
+            scrollPosition = 0;
+          } else {
+            // Calculate scroll position considering the fixed nav bar
+            scrollPosition = targetElement.offsetTop - navHeight;
+            // Ensure scroll position doesn't go below 0
+            scrollPosition = Math.max(0, scrollPosition);
+          }
+
+          window.scrollTo({
+            top: scrollPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Drag and Drop functionality
+    draggableSections.forEach(section => {
+      section.addEventListener('dragstart', (e) => {
+        // Only allow drag if move mode is enabled
+        if (!moveModeToggle.checked) {
+          e.preventDefault();
+          return;
+        }
+        draggedItem = section;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', section.id);
+        setTimeout(() => {
+          section.classList.add('dragging'); // Add class after a short delay to avoid affecting drag image
+        }, 0);
+      });
+
+      section.addEventListener('dragover', (e) => {
+        // Only allow dragover if move mode is enabled
+        if (!moveModeToggle.checked) {
+          e.preventDefault();
+          return;
+        }
+        e.preventDefault(); // Crucial to allow drop
+
+        e.dataTransfer.dropEffect = 'move';
+        const targetSection = e.target.closest('.draggable-section'); // Get the actual draggable section
+
+        // Remove any existing drag-over classes from all sections before adding new ones
+        document.querySelectorAll('.draggable-section').forEach(el => {
+          el.classList.remove('drag-over-above', 'drag-over-below');
+        });
+
+        if (targetSection && targetSection !== draggedItem) {
+          const bounding = targetSection.getBoundingClientRect();
+          const offset = e.clientY - bounding.top;
+          const isAfter = offset > bounding.height / 2;
+          
+          // Debugging log: Check isAfter and target info
+          console.log(`Dragover on ${targetSection.id}: isAfter=${isAfter}, offset=${offset}, height=${bounding.height}`);
+
+
+          if (isAfter) {
+            targetSection.classList.add('drag-over-below');
+          } else {
+            targetSection.classList.add('drag-over-above');
+          }
+        }
+      });
+
+      section.addEventListener('dragleave', (e) => {
+        const targetSection = e.target.closest('.draggable-section'); // Get the actual draggable section
+        if (targetSection) {
+          targetSection.classList.remove('drag-over-above', 'drag-over-below');
+        }
+      });
+
+      section.addEventListener('drop', (e) => {
+        // Only allow drop if move mode is enabled
+        if (!moveModeToggle.checked) {
+          e.preventDefault();
+          return;
+        }
+        e.preventDefault();
+        const targetSection = e.target.closest('.draggable-section'); // Get the actual draggable section
+
+        // Remove all drag-over classes from all sections immediately after drop
+        document.querySelectorAll('.draggable-section').forEach(el => {
+          el.classList.remove('drag-over-above', 'drag-over-below');
+        });
+
+        if (targetSection && targetSection !== draggedItem) {
+          const parent = draggedItem.parentNode;
+
+          // Recalculate isAfter on drop to ensure accuracy
+          const bounding = targetSection.getBoundingClientRect();
+          const offset = e.clientY - bounding.top;
+          const isAfter = offset > bounding.height / 2;
+
+          // Debugging log: Confirm drop action
+          console.log(`Drop on ${targetSection.id}: isAfter=${isAfter}, moving ${draggedItem.id}`);
+
+
+          if (isAfter) {
+            // Insert the dragged item after the target section
+            parent.insertBefore(draggedItem, targetSection.nextSibling);
+          } else {
+            // Insert the dragged item before the target section
+            parent.insertBefore(draggedItem, targetSection);
+          }
+        }
+      });
+
+      section.addEventListener('dragend', () => {
+        if (draggedItem) {
+          draggedItem.classList.remove('dragging'); // Clean up dragged item styles
+          draggedItem = null; // Reset dragged item
+        }
+        // Ensure no drag-over classes remain on any section globally at the end
+        document.querySelectorAll('.draggable-section').forEach(el => {
+          el.classList.remove('drag-over-above', 'drag-over-below');
+        });
+      });
+    });
+
+    // Initialize drag mode on page load (off by default)
+    document.addEventListener('DOMContentLoaded', updateDragMode);
+  </script>
 </body>
 </html>
