@@ -1,52 +1,238 @@
+/*
+  FitFlow Global Styles
+  ---------------------------------------------------
+  This stylesheet provides base styles, component definitions,
+  and a theme system using CSS Custom Properties (variables).
+  It's designed to be modular and work harmoniously with
+  Tailwind CSS utility classes used in your HTML files.
+*/
+
+/* 1. CSS Custom Properties (Variables) */
+/*
+  These variables define your design tokens (colors, fonts, spacing, transitions).
+  They allow for easy global changes and are crucial for theme switching (e.g., dark mode).
+*/
+:root {
+  /* Colors - Define your core palette */
+  --color-primary: #6a11cb;          /* Deep Purple (from your gradient) */
+  --color-secondary: #2575fc;        /* Bright Blue (from your gradient) */
+  --color-accent-green: #33cc33;     /* Green for highlights/success */
+  --color-text-light: #ffffff;       /* Default text color on dark/gradient backgrounds */
+  --color-text-dark: #333333;        /* Default text color on light backgrounds */
+  --color-gray-dark: #4b5563;        /* Example dark gray, similar to Tailwind's gray-700 */
+  --color-gray-light: #f9f9f9;       /* Example light gray, similar to your original body background */
+  --color-border-default: #cccccc;   /* Standard border color */
+  --color-button-default-bg: #007bff;
+  --color-button-default-hover-bg: #0056b3;
+
+  /* Backgrounds - Base for light mode and fallback for gradients */
+  --background-gradient-default: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  --background-solid-light: var(--color-gray-light);
+  --background-solid-dark: #1a1a1a; /* A very dark background for dark mode */
+
+  /* Component Backgrounds (for frosted glass effect) */
+  --component-bg-light-opacity: rgba(255, 255, 255, 0.1); /* Light frosted glass base */
+  --component-bg-dark-opacity: rgba(0, 0, 0, 0.3);       /* Dark frosted glass base */
+
+  /* Fonts - Imported from Google Fonts in HTML <head> */
+  --font-family-base: 'Inter', sans-serif;
+  --font-family-heading: 'Montserrat', sans-serif; /* You can also use 'Inter' for headings if a single font is preferred */
+  --font-family-alt: 'Roboto', sans-serif; /* Alternative font, if needed for specific elements */
+
+  /* Spacing - Consistent units for padding, margin, gap */
+  --space-xxs: 0.25rem; /* 4px */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 1rem;     /* 16px */
+  --space-md: 1.5rem;   /* 24px */
+  --space-lg: 2rem;     /* 32px */
+  --space-xl: 3rem;     /* 48px */
+  --space-xxl: 4rem;    /* 64px */
+
+  /* Transitions - For smooth animations */
+  --transition-speed-fast: 0.2s;
+  --transition-speed-normal: 0.3s;
+  --transition-speed-slow: 0.5s;
+  --transition-ease: ease-in-out;
+
+  /* Border Radius */
+  --border-radius-sm: 0.25rem; /* 4px */
+  --border-radius-md: 0.5rem;  /* 8px */
+  --border-radius-lg: 1rem;    /* 16px */
+  --border-radius-xl: 1.5rem;  /* 24px */
+  --border-radius-full: 9999px; /* For pills/circles */
+
+
+  /* Current Theme Variables (These will be dynamically changed for dark mode) */
+  --current-text-color: var(--color-text-light);
+  --current-heading-color: var(--color-text-light);
+  --current-background: var(--background-gradient-default);
+  --current-component-bg: var(--component-bg-light-opacity);
+  --current-border-color: var(--color-border-default);
+}
+
+/* 2. Dark Mode Theme */
+/*
+  Apply the 'dark-mode' class to the <body> tag to switch to dark theme.
+  JavaScript would toggle this class.
+*/
+body.dark-mode {
+  --current-text-color: var(--color-gray-light); /* Light text on dark bg */
+  --current-heading-color: var(--color-gray-light);
+  --current-background: var(--background-solid-dark);
+  --current-component-bg: var(--component-bg-dark-opacity);
+  --current-border-color: var(--color-border-dark);
+}
+
+
+/* 3. Base Styles (Global resets and typography defaults) */
+html {
+  box-sizing: border-box; /* Ensures consistent box model across all elements */
+  font-size: 16px;       /* Defines 1rem = 16px base for relative units */
+}
+
+/* Universal box-sizing for all elements */
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
-  padding: 2rem;
+  padding: var(--space-sm); /* Responsive padding primarily handled by Tailwind in HTML files */
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: 'Roboto', sans-serif;
-  background: #f9f9f9;
+  font-family: var(--font-family-base); /* Apply Inter as base font */
+  color: var(--current-text-color);
+  background: var(--current-background);
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevents horizontal scroll from responsive issues */
+  /* Smooth transition for theme changes */
+  transition: background var(--transition-speed-slow) var(--transition-ease),
+              color var(--transition-speed-slow) var(--transition-ease);
 }
 
-h1 {
-  margin-bottom: 0.5rem;
-  color: #333;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 2rem;
+/* Typography Defaults (Let Tailwind utility classes override for specific elements) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading); /* Montserrat for headings */
+  color: var(--current-heading-color);
+  margin-top: 0;
+  margin-bottom: var(--space-xs); /* Consistent small margin below headings */
 }
 
 p {
   margin-top: 0;
-  margin-bottom: 1.5rem;
-  color: #666;
-  text-align: center;
+  margin-bottom: var(--space-md); /* Consistent medium margin below paragraphs */
+  color: var(--current-text-color); /* Inherit current theme text color */
+  text-align: center; /* Default paragraph alignment (can be overridden by Tailwind) */
 }
-.button {
+
+a {
+  text-decoration: none; /* Remove default underline */
+  color: inherit;        /* Inherit text color from parent unless specified */
+  transition: color var(--transition-speed-fast) var(--transition-ease);
+}
+
+a:hover {
+  opacity: 0.8; /* Subtle hover effect for all links */
+}
+
+/* 4. Components (Reusable UI blocks) */
+/*
+  These are custom components that might have complex styling not fully covered by Tailwind,
+  or are central to the app's unique design.
+*/
+
+.btn { /* Renamed from .button to avoid potential conflict with Tailwind or HTML element default */
   display: inline-block;
-  padding: 1rem 2rem;
-  margin: 0.5rem;
-  background: #007bff;
-  color: #fff;
+  padding: var(--space-sm) var(--space-lg); /* Consistent padding */
+  margin: var(--space-xs); /* Consistent margin around buttons */
+  background: var(--color-button-default-bg);
+  color: var(--color-text-light); /* Light text on button background */
   text-decoration: none;
-  border-radius: 5px;
-  transition: background 0.3s ease;
+  border: none; /* Remove default button border */
+  border-radius: var(--border-radius-md); /* Consistent rounded corners */
+  font-weight: 600; /* Semi-bold text */
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap; /* Prevent text wrapping on small buttons */
+  transition: background var(--transition-speed-normal) var(--transition-ease),
+              transform var(--transition-speed-normal) var(--transition-ease),
+              box-shadow var(--transition-speed-normal) var(--transition-ease);
 }
 
-.button:hover {
-  background: #0056b3;
+.btn:hover {
+  background: var(--color-button-default-hover-bg);
+  transform: translateY(-2px); /* Subtle lift effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 600px) {
+/* Specific button variants */
+.btn-primary {
+  background: var(--color-primary);
+}
+
+.btn-primary:hover {
+  background: var(--color-secondary); /* Hover state uses secondary color from gradient */
+}
+
+.btn-secondary {
+  background: var(--color-gray-dark);
+}
+
+.btn-secondary:hover {
+  background: var(--color-gray-darker); /* A slightly darker gray */
+}
+
+/* Base styles for "frosted glass" style containers (should largely be handled by Tailwind classes in HTML) */
+.frosted-card {
+  background-color: var(--current-component-bg);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: var(--border-radius-xl); /* Rounded-3xl in Tailwind is 1.5rem */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+  transition: background-color var(--transition-speed-normal) var(--transition-ease); /* For theme changes */
+}
+
+/* 5. Utility Classes (Minimal, as Tailwind excels here) */
+/*
+  Avoid creating utilities that duplicate Tailwind's.
+  These would be for highly specific, non-Tailwind functions if absolutely necessary.
+*/
+
+/* Example: Text shadow (if not using Tailwind's custom config for shadows) */
+.text-shadow-lg {
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 6. Responsiveness (Use Media Queries to adjust base/component styles for different screens) */
+@media (max-width: 768px) { /* Medium screens (corresponds to Tailwind's 'md' breakpoint) */
   body {
-    padding: 1rem;
+    padding: var(--space-xs); /* Reduce global padding on smaller screens */
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Adjust heading size */
   }
 
-  .button {
-    width: 100%;
-    text-align: center;
-    padding: 0.75rem;
+  .btn {
+    padding: var(--space-sm); /* Slightly smaller padding for buttons */
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 640px) { /* Small screens (corresponds to Tailwind's 'sm' breakpoint) */
+  h1 {
+    font-size: 1.5rem; /* Further reduce heading size on mobile */
+  }
+
+  p {
+    font-size: 0.95rem; /* Slightly smaller paragraph text */
+  }
+
+  .btn {
+    padding: 0.75rem var(--space-md); /* Even smaller padding for mobile buttons */
+    font-size: 0.9rem;
+    width: auto; /* Buttons will naturally adjust with flexbox in HTML, but here as a fallback */
+    margin: var(--space-xs) auto; /* Center individual buttons if they stack */
+  }
 }
