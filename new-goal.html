@@ -1,64 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - FitFlow</title>
-  <!-- Tailwind CSS CDN -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitFlow</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Custom styles for the gradient background and font */
     body {
       font-family: 'Inter', sans-serif;
-      /* The gradient background from other pages */
       background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center text-white p-4">
 
-  <!-- Main glassmorphism card container -->
-  <div class="text-center bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-8 max-w-lg w-full">
+  <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-8 max-w-md w-full">
     
-    <!-- Header Section -->
-    <div class="mb-8">
-        <h1 class="text-4xl md:text-5xl font-extrabold mb-2">FitFlow</h1>
-        <p class="text-white/80 text-lg">Your daily fitness dashboard.</p>
+    <div class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-2">FitFlow</h1>
+      <p class="text-white/80">Your daily fitness dashboard.</p>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      
-      <!-- Start Workout -->
-      <a href="workout.html" class="block bg-white/10 hover:bg-white/20 transition-colors p-6 rounded-2xl">
-        <p class="text-4xl mb-2">🏋️</p>
-        <p class="font-semibold text-lg">Start Workout</p>
-      </a>
-
-      <!-- View History -->
-      <a href="history.html" class="block bg-white/10 hover:bg-white/20 transition-colors p-6 rounded-2xl">
-        <p class="text-4xl mb-2">📈</p>
-        <p class="font-semibold text-lg">View History</p>
-      </a>
-      
-      <!-- Set New Goal (Corrected Link) -->
-      <a href="new-goal.html" class="block bg-white/10 hover:bg-white/20 transition-colors p-6 rounded-2xl">
-        <p class="text-4xl mb-2">🎯</p>
-        <p class="font-semibold text-lg">Set New Goal</p>
-      </a>
-
-      <!-- Store -->
-      <a href="store.html" class="block bg-white/10 hover:bg-white/20 transition-colors p-6 rounded-2xl">
-        <p class="text-4xl mb-2">🛒</p>
-        <p class="font-semibold text-lg">Visit Store</p>
-      </a>
-
+    <!-- Button Grid -->
+    <div class="grid grid-cols-2 gap-4">
+      <a href="start-workout.html" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">Start Workout</a>
+      <a href="history.html" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">View History</a>
+      <a href="new-goal.html" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">Set New Goal</a>
+      <a href="store.html" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">Visit Store</a>
     </div>
 
   </div>
+
 </body>
 </html>
