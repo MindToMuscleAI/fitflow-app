@@ -6,26 +6,68 @@
   <title>Set a New Goal - FitFlow</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Inter font -->
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* Custom styles for the gradient background and font */
     body {
       font-family: 'Inter', sans-serif;
+      /* The gradient background */
       background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      padding: 1rem;
+    }
+
+    /* Custom styling for the select dropdown arrow */
+    select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
     }
   </style>
 </head>
-<body>
-  <div class="text-center bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-3xl shadow-2xl p-8 max-w-md w-full">
-    <h1 class="text-3xl font-bold mb-4">Set a New Goal</h1>
-    <p class="mb-6 opacity-90">Coming soon! Here you will be able to set personalized fitness goals.</p>
-    <a href="index.html" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full">Back</a>
+<body class="min-h-screen flex items-center justify-center text-white p-4">
+
+  <!-- Main glassmorphism card container -->
+  <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-8 max-w-md w-full">
+    
+    <!-- Header Section -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-2">New Goal</h1>
+        <p class="text-white/80">What do you want to achieve?</p>
+    </div>
+
+    <!-- New Goal Form -->
+    <form action="#" method="POST" class="space-y-6">
+      
+      <!-- Goal Type Dropdown -->
+      <div>
+        <label for="goal-type" class="block text-sm font-semibold mb-2 text-white/90">Goal Type</label>
+        <select id="goal-type" name="goal-type" class="w-full bg-white/10 border border-transparent focus:border-white/50 focus:ring-0 rounded-lg py-3 px-4 transition">
+          <option class="bg-gray-700">Strength</option>
+          <option class="bg-gray-700">Weight Loss</option>
+          <option class="bg-gray-700">Endurance</option>
+          <option class="bg-gray-700">Flexibility</option>
+        </select>
+      </div>
+
+      <!-- Goal Description Input -->
+      <div>
+        <label for="goal-description" class="block text-sm font-semibold mb-2 text-white/90">Describe Your Goal</label>
+        <input type="text" id="goal-description" name="goal-description" placeholder="e.g., Run a 5k in under 30 minutes" class="w-full bg-white/10 placeholder-white/50 border border-transparent focus:border-white/50 focus:ring-0 rounded-lg py-3 px-4 transition">
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-2 space-y-4">
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg">Set My Goal</button>
+        <a href="index.html" class="block w-full text-center bg-white/20 hover:bg-white/30 text-white font-semibold py-3 px-4 rounded-lg transition-colors">Back</a>
+      </div>
+    </form>
+
   </div>
 </body>
 </html>
