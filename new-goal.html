@@ -2,34 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FitFlow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set a New Goal - FitFlow</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     }
+
+    select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      appearance: none;
+    }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center text-white p-4">
-
   <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-8 max-w-md w-full">
-    
     <div class="text-center mb-8">
-      <h1 class="text-3xl md:text-4xl font-extrabold mb-2">FitFlow</h1>
-      <p class="text-white/80">Your daily fitness dashboard.</p>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-2">New Goal</h1>
+      <p class="text-white/80">What do you want to achieve?</p>
     </div>
 
-    <!-- Button Grid -->
-    <div class="grid grid-cols-2 gap-4">
-      <a href="start-workout.html" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">Start Workout</a>
-      <a href="history.html" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">View History</a>
-      <a href="new-goal.html" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">Set New Goal</a>
-      <a href="store.html" class="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-4 rounded-lg text-center shadow-md transition">Visit Store</a>
-    </div>
+    <form action="#" method="POST" class="space-y-6">
+      <div>
+        <label for="goal-type" class="block text-sm font-semibold mb-2 text-white/90">Goal Type</label>
+        <select id="goal-type" name="goal-type" class="w-full bg-white/10 border border-transparent focus:border-white/50 focus:ring-0 rounded-lg py-3 px-4 transition">
+          <option class="bg-gray-700">Strength</option>
+          <option class="bg-gray-700">Weight Loss</option>
+          <option class="bg-gray-700">Endurance</option>
+          <option class="bg-gray-700">Flexibility</option>
+        </select>
+      </div>
 
+      <div>
+        <label for="goal-description" class="block text-sm font-semibold mb-2 text-white/90">Describe Your Goal</label>
+        <input type="text" id="goal-description" name="goal-description" placeholder="e.g., Run a 5k in under 30 minutes" class="w-full bg-white/10 placeholder-white/50 border border-transparent focus:border-white/50 focus:ring-0 rounded-lg py-3 px-4 transition" />
+      </div>
+
+      <div class="pt-2 space-y-4">
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg">Set My Goal</button>
+        <a href="index.html" class="block w-full text-center bg-white/20 hover:bg-white/30 text-white font-semibold py-3 px-4 rounded-lg transition-colors">Back</a>
+      </div>
+    </form>
   </div>
-
 </body>
 </html>
